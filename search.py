@@ -5,10 +5,10 @@ import sys
 import lucene
 
 
-FIELD_CONTENTS = "title"
-FIELD_PATH = "path"
+FIELD_CONTENTS = "abstract"
+FIELD_PATH = "recordnum"
 
-QUERY_STRING = "India"
+QUERY_STRING = "infection"
 
 STORE_DIR = "/home/jorge/lucene_index"
 
