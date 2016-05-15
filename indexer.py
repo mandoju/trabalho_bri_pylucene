@@ -62,7 +62,7 @@ if __name__ == '__main__':
      print "lucene version is:", lucene.VERSION
 
      # Get the analyzer
-     analyzer = lucene.StandardAnalyzer(lucene.Version.LUCENE_CURRENT)
+     analyzer = lucene.EnglishAnalyzer(lucene.Version.LUCENE_CURRENT)
 
      # Get index storage
      store = lucene.SimpleFSDirectory(lucene.File(INDEX_DIR))

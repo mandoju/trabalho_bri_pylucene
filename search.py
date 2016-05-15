@@ -9,18 +9,20 @@ import time
 
 
 
-from lucene import QueryParser , IndexSearcher, IndexReader, StandardAnalyzer, \
+from lucene import QueryParser , IndexSearcher, IndexReader, StandardAnalyzer,EnglishAnalyzer, \
         TermPositionVector, SimpleFSDirectory, File, MoreLikeThis, \
             VERSION, initVM, Version
 import sys
 import lucene
-
 class query_search:
     def __init__(self,query_number,query_text):
         self.query_number = query_number
         self.query_text = query_text
 
-
+class resultado_query:
+    def __init__(self,query_number,query_results):
+        self.query_number = query_number
+        self.query_results = query_results
 
 FIELD_CONTENTS = "abstract"
 FIELD_PATH = "recordnum"
@@ -33,9 +35,12 @@ STORE_DIR = "/home/jorge/lucene_index"
 
 arquivos = ['db/cfquery.xml']
 querys = []
+resultados = []
 # parte de ler o xml usando o dtd
 f = codecs.open('db/cfcquery-2.dtd')
 dtd = ET.DTD(f)
+
+
 
 for entrada in arquivos:
         root = ET.parse(entrada)
@@ -75,10 +80,13 @@ if __name__ == '__main__':
     searcher = IndexSearcher(ireader)
 
     # Get the analyzer
-    analyzer = StandardAnalyzer(Version.LUCENE_CURRENT)
+    analyzer = EnglishAnalyzer(Version.LUCENE_CURRENT)
 
     for query in querys:
+        query_number =  query.query_number
         # Constructs a query parser. We specify what field to search into.
+        query.query_text = query.query_text.replace('?','')
+        query.query_text = query.query_text.replace('*','')
         queryParser = QueryParser(Version.LUCENE_CURRENT,
                                   FIELD_CONTENTS, analyzer)
 
@@ -86,12 +94,25 @@ if __name__ == '__main__':
         query = queryParser.parse(query.query_text)
 
         # Run the query and get top 50 results
-        topDocs = searcher.search(query, 50)
+        topDocs = searcher.search(query,50000)
 
         # Get top hits
         scoreDocs = topDocs.scoreDocs
-        print "%s total matching documents." % len(scoreDocs)
 
-        for scoreDoc in scoreDocs:
-            doc = searcher.doc(scoreDoc.doc)
-            print doc.get(FIELD_PATH)
+        r = resultado_query(query_number,scoreDocs)
+        resultados.append(r)
+        #print "%s total matching documents." % len(scoreDocs)
+        #for scoreDoc in scoreDocs:
+        #    doc = searcher.doc(scoreDoc.doc)
+        #    print doc.get(FIELD_PATH)
+
+    with open('out/resultados.csv', 'w') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=';',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        for row in resultados:
+            resultados_da_row = []
+            for resultado_da_query in row.query_results:
+                doc = searcher.doc(resultado_da_query.doc)
+                resultados_da_row.append(int(doc.get(FIELD_PATH)))
+            spamwriter.writerow([row.query_number,resultados_da_row])
+
