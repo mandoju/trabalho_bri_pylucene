@@ -29,7 +29,7 @@ FIELD_PATH = "recordnum"
 
 #QUERY_STRING = "infection"
 
-STORE_DIR = "/home/jorge/lucene_index"
+STORE_DIR = "lucene_index"
 
 
 
@@ -106,7 +106,7 @@ if __name__ == '__main__':
         #    doc = searcher.doc(scoreDoc.doc)
         #    print doc.get(FIELD_PATH)
 
-    with open('out/resultados.csv', 'w') as csvfile:
+    with open('comparar_resultados/resultados_da_busca/resultados.csv', 'w') as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=';',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
         for row in resultados:

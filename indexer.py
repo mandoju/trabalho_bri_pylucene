@@ -17,7 +17,8 @@ class documento:
          self.recordnum = recordnum
          self.abstract = abstract
 
-
+#INDEX_DIR = "/home/jorge/lucene_index"
+INDEX_DIR = "lucene_index"
 arquivos = ['db/cf74.xml','db/cf75.xml','db/cf76.xml','db/cf77.xml','db/cf78.xml','db/cf79.xml']
 documentos = []
 # parte de ler o xml usando o dtd
@@ -53,38 +54,36 @@ for entrada in arquivos:
 
             #print(dtd.error_log.filter_from_errors())
 
-if __name__ == '__main__':
-     INDEX_DIR = "/home/jorge/lucene_index"
+# Initialize lucene and JVM
+lucene.initVM()
 
-     # Initialize lucene and JVM
-     lucene.initVM()
+print "lucene version is:", lucene.VERSION
 
-     print "lucene version is:", lucene.VERSION
+# Get the analyzer
+analyzer = lucene.EnglishAnalyzer(lucene.Version.LUCENE_CURRENT)
 
-     # Get the analyzer
-     analyzer = lucene.EnglishAnalyzer(lucene.Version.LUCENE_CURRENT)
+# Get index storage
+store = lucene.SimpleFSDirectory(lucene.File(INDEX_DIR))
 
-     # Get index storage
-     store = lucene.SimpleFSDirectory(lucene.File(INDEX_DIR))
+# Get index writer
+writer = lucene.IndexWriter(store, analyzer, True, lucene.IndexWriter.MaxFieldLength.LIMITED)
 
-     # Get index writer
-     writer = lucene.IndexWriter(store, analyzer, True, lucene.IndexWriter.MaxFieldLength.LIMITED)
+for record in documentos:
+    try:
+        # create a document that would we added to the index
+        doc = lucene.Document()
 
-     for record in documentos:
-         try:
-             # create a document that would we added to the index
-             doc = lucene.Document()
+        # Add a field to this document
+        field_recordnum = lucene.Field("recordnum", str(record.recordnum), lucene.Field.Store.YES, lucene.Field.Index.ANALYZED)
+        field_abstract = lucene.Field("abstract", str(record.abstract), lucene.Field.Store.YES, lucene.Field.Index.ANALYZED)
+        # Add this field to the document
+        doc.add(field_recordnum)
+        doc.add(field_abstract)
 
-             # Add a field to this document
-             field_recordnum = lucene.Field("recordnum", str(record.recordnum), lucene.Field.Store.YES, lucene.Field.Index.ANALYZED)
-             field_abstract = lucene.Field("abstract", str(record.abstract), lucene.Field.Store.YES, lucene.Field.Index.ANALYZED)
-             # Add this field to the document
-             doc.add(field_recordnum)
-             doc.add(field_abstract)
+        # Add the document to the index
+        writer.addDocument(doc)
 
-             # Add the document to the index
-             writer.addDocument(doc)
-             print 'ok'
-         except Exception, e:
-              print "Failed :", e
-     writer.close()
+    except Exception, e:
+        print "Failed :", e
+writer.close()
+print "end"

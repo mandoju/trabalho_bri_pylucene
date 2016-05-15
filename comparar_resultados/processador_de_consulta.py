@@ -1,4 +1,4 @@
-import configparser
+#import configparser
 from collections import OrderedDict
 from lxml import etree as ET
 from xml.dom import minidom
@@ -33,7 +33,6 @@ class querynum_item_vote_list:
         self.item_vote_list = item_vote_list
 
 
-#classe para ler  múltiplos "LEIA" do arquivo de configuração
 class MultiOrderedDict(OrderedDict):
     def __setitem__(self, key, value):
         if isinstance(value, list) and key in self:
@@ -47,18 +46,11 @@ def main():
     logging.info("Program started!")
 
 
-    # lendo o arquivo com os leia ,consulta e esperados
-    config = configparser.RawConfigParser(strict=False, dict_type=MultiOrderedDict)
 
-    logging.info("Reading PC.CFG")
+    entradas = ['../db/cfquery.xml']
+    esperado = ['resultados_da_busca/esperados.csv']
 
-
-    config.read(['PC.CFG'])
-    entradas = config.get("DEFAULT", "LEIA");
-    consulta = config.get("DEFAULT", "CONSULTAS");
-    esperado = config.get("DEFAULT", "ESPERADOS");
-
-    f = codecs.open('db\cfcquery-2.dtd')
+    f = codecs.open('db/cfcquery-2.dtd')
     dtd = ET.DTD(f)
 
 
@@ -67,7 +59,6 @@ def main():
 
     logging.info("Starting reading xml")
 
-    begin_time = time.perf_counter()
 
 
     for entrada in entradas:
@@ -101,25 +92,11 @@ def main():
                 row_esperados.append(querynum_item_vote_list(querynum,item_votes_list))
                 #row_esperados.append(querynum_parlist(querynum,))
         else:
-            logging.info(entrada + " xml file didn't pass on dtd validation")
 
             print(dtd.error_log.filter_from_errors())
 
-    end_time = time.perf_counter()
-    total_time = end_time - begin_time
 
-    logging.info("Inverted list made " + str(len(entradas) / total_time) + " documents per second")
-
-
-    logging.info("writing on csv")
-
-    with open(consulta[0], 'w', newline='') as csvfile:
-        spamwriter = csv.writer(csvfile, delimiter=';',
-                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        for row in row_consulta:
-            spamwriter.writerow([row.querynum,row.querytext])
-
-    with open(esperado[0], 'w', newline='') as csvfile:
+    with open(esperado[0], 'w') as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=';',
             quotechar='|', quoting=csv.QUOTE_MINIMAL)
         for row in row_esperados:
@@ -134,8 +111,5 @@ def main():
 #        for row in row_esperados:
 #            spamwriter.writerow([row.querynum, row.querytext])
 
-
-logging.basicConfig(filename='log\processador_de_consulta.log', level=logging.INFO,
-                    format='%(asctime)s\t%(levelname)s\t%(message)s')
 
 main()
