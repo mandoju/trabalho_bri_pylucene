@@ -1,0 +1,16 @@
+Este trabalho foi feito utilizando python 2.7 com as bibliotecas; pylucene,numpy e scipy
+
+Foram criados quatro módulos para executar o trabalho, e eles são executados na seguinte ordem:
+indexer.py => Serve para indexar os dados utilizando o lucene
+search.py => Serve para gerar os resultados da busca usando o lucene
+processador_de_consulta.py => É parecido com o processador de consultas do trabalho anterior, porém serve apenas para extrair os resultados esperados
+comparar_resultas => etapa que é executa a comparação do resultado do lucene com os resultados esperados.
+
+o main.py serve para executar todos os módulos em sequência.
+os resultados da busca fica em resultados_da_busca/resultados.csv
+a comparação é impressa na tela do console do python, porém o gráfico de 11 pontos foi gerado um csv que fica na pasta resultados_da_comparacao
+
+os resultados gerados da média de todas as queries foram:
+MAP com precision@10 :0.415151515152
+MAP com todos os resultados: 0.0468020550402
+Media do F1 : 0.0844161459738

@@ -5,7 +5,6 @@ from sklearn.metrics import f1_score
 from sklearn.metrics import precision_score
 from math import log
 
-
 def precisao(array_resultado,array_esperado):
 
     verdadeiro_positivo = 0
@@ -45,6 +44,8 @@ class resultado:
     def __init__(self,posicao,resultados):
         self.posicao = posicao
         self.resultados = resultados
+
+print 'Comparando os resultados'
 
 def comparar():
 

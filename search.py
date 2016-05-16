@@ -41,6 +41,7 @@ f = codecs.open('db/cfcquery-2.dtd')
 dtd = ET.DTD(f)
 
 
+print 'Procurando com o pylucene'
 
 for entrada in arquivos:
         root = ET.parse(entrada)
@@ -64,9 +65,9 @@ for entrada in arquivos:
             print(dtd.error_log.filter_from_errors())
 
 
-if __name__ == '__main__':
+def pesquisar_com_lucene():
     initVM()
-    print 'lucene', VERSION
+    #print 'lucene', VERSION
 
     # Get handle to index directory
     directory = SimpleFSDirectory(File(STORE_DIR))
@@ -106,7 +107,7 @@ if __name__ == '__main__':
         #    doc = searcher.doc(scoreDoc.doc)
         #    print doc.get(FIELD_PATH)
 
-    with open('comparar_resultados/resultados_da_busca/resultados.csv', 'w') as csvfile:
+    with open('resultados_da_busca/resultados.csv', 'w') as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=';',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
         for row in resultados:
@@ -118,3 +119,4 @@ if __name__ == '__main__':
                 i = i + 1
             spamwriter.writerow([row.query_number,resultados_da_row])
 
+pesquisar_com_lucene()

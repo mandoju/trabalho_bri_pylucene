@@ -40,14 +40,15 @@ class MultiOrderedDict(OrderedDict):
         else:
             super(OrderedDict,self).__setitem__(key, value)
 
+print 'Processando os resultados esperados'
 
-def main():
+def processador_de_consulta():
 
     logging.info("Program started!")
 
 
 
-    entradas = ['../db/cfquery.xml']
+    entradas = ['db/cfquery.xml']
     esperado = ['resultados_da_busca/esperados.csv']
 
     f = codecs.open('db/cfcquery-2.dtd')
@@ -112,4 +113,4 @@ def main():
 #            spamwriter.writerow([row.querynum, row.querytext])
 
 
-main()
+processador_de_consulta()

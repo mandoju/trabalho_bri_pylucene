@@ -12,10 +12,13 @@ import csv
 
 import lucene
 
+
 class documento:
     def __init__(self,recordnum,abstract):
          self.recordnum = recordnum
          self.abstract = abstract
+
+print 'Indexando'
 
 #INDEX_DIR = "/home/jorge/lucene_index"
 INDEX_DIR = "lucene_index"
@@ -57,7 +60,7 @@ for entrada in arquivos:
 # Initialize lucene and JVM
 lucene.initVM()
 
-print "lucene version is:", lucene.VERSION
+#print "lucene version is:", lucene.VERSION
 
 # Get the analyzer
 analyzer = lucene.EnglishAnalyzer(lucene.Version.LUCENE_CURRENT)
