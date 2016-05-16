@@ -1,8 +1,10 @@
+from __future__ import division
 import csv
 import numpy as np
 from sklearn.metrics import f1_score
 from sklearn.metrics import precision_score
 from math import log
+
 
 def precisao(array_resultado,array_esperado):
 
@@ -14,8 +16,8 @@ def precisao(array_resultado,array_esperado):
         else:
             falso_positivo += 1
 
-    resultado = verdadeiro_positivo / (verdadeiro_positivo + falso_positivo)
-    return resultado
+    resultado_final = verdadeiro_positivo / (verdadeiro_positivo + falso_positivo)
+    return resultado_final
 
 def recall(array_resultado,array_esperado):
 
@@ -54,12 +56,12 @@ def comparar():
     array_resultados = []
 
     #carregando consultas
-    with open("out\esperados.csv") as csvfile:
+    with open("resultados_da_busca/esperados.csv") as csvfile:
         spamreader = csv.reader(csvfile, delimiter=';', quotechar='|')
         for row in spamreader:
             resultados_esperados.append(resultado(row[0],eval(row[1])))
 
-    with open("out\\resultado_busca.csv") as csvfile:
+    with open("resultados_da_busca/resultados.csv") as csvfile:
         spamreader = csv.reader(csvfile, delimiter=';', quotechar='|')
         for row in spamreader:
             resultados_obtidos.append(resultado(row[0], eval(row[1])))
@@ -164,11 +166,11 @@ def comparar():
     print("MAP com todos os resultados: " + str(media(array_de_precisao)))
     #print(media(array_de_recall))
     #print(media(array_de_recall_10))
-    print("Média do F1 : " + str(media(array_de_f1)))
+    print("Media do F1 : " + str(media(array_de_f1)))
     #print(sum(array_de_recall)/len(array_de_recall))
 
 
-    with open("out\\11pontos-nostemmer", 'w', newline='') as csvfile:
+    with open("resultados_da_comparacao/11pontos-stemmer.csv", 'w') as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=';',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
         spamwriter.writerow([0, array_para_grafico_00])

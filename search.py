@@ -111,8 +111,10 @@ if __name__ == '__main__':
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
         for row in resultados:
             resultados_da_row = []
+            i = 1
             for resultado_da_query in row.query_results:
                 doc = searcher.doc(resultado_da_query.doc)
-                resultados_da_row.append(int(doc.get(FIELD_PATH)))
+                resultados_da_row.append((i,int(doc.get(FIELD_PATH))))
+                i = i + 1
             spamwriter.writerow([row.query_number,resultados_da_row])
 
